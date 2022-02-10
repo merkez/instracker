@@ -51,6 +51,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ROBOTCUK }}
     
+    - name: Get Number of Followers 
+      id: get_number_of_followers
+      run: echo "::set-output name=FOLLOWERS::$(echo "$(cat ./inst_followers-*.csv | wc -l) - 1" | bc)"
+      
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -58,10 +62,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.date.outputs.date }} 
-        release_name: Followers information saved at ${{ steps.date.outputs.date }}
+        release_name: ${{ steps.get_number_of_followers.outputs.FOLLOWERS }} Followers information saved at ${{ steps.date.outputs.date }}
         draft: false
         prerelease: false
-
+    
     - name: Upload Release Assets
       uses: shogo82148/actions-upload-release-asset@v1
       with:
