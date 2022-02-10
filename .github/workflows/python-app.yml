@@ -48,7 +48,7 @@ jobs:
       run: |
         git config --global user.email "robotcuk@randommail.com"
         git config --global user.name "robotcuk"
-        git commit --allow-empty -m "Followers extracted: ${{ steps.date.outputs.date }}"
+        git commit --allow-empty -m "${{ steps.get_number_of_followers.outputs.FOLLOWERS }} Followers on ${{ steps.date.outputs.date }}"
         git tag -a ${{ steps.date.outputs.date }} -m "${{ steps.get_number_of_followers.outputs.FOLLOWERS }} followers on ${{ steps.date.outputs.date }}"
         git push origin ${{ steps.date.outputs.date }}
         git push origin -f master
