@@ -40,20 +40,21 @@ jobs:
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"     
     
+    - name: Get Number of Followers 
+      id: get_number_of_followers
+      run: echo "::set-output name=FOLLOWERS::$(echo "$(cat ./inst_followers-*.csv | wc -l) - 1" | bc)" 
+    
     - name: Empty commit push
       run: |
         git config --global user.email "robotcuk@randommail.com"
         git config --global user.name "robotcuk"
         git commit --allow-empty -m "Followers extracted: ${{ steps.date.outputs.date }}"
-        git tag -a ${{ steps.date.outputs.date }} -m "get followers on ${{ steps.date.outputs.date }}"
+        git tag -a ${{ steps.date.outputs.date }} -m "${{ steps.get_number_of_followers.outputs.FOLLOWERS }} followers on ${{ steps.date.outputs.date }}"
         git push origin ${{ steps.date.outputs.date }}
         git push origin -f master
       env:
         GITHUB_TOKEN: ${{ secrets.ROBOTCUK }}
-    
-    - name: Get Number of Followers 
-      id: get_number_of_followers
-      run: echo "::set-output name=FOLLOWERS::$(echo "$(cat ./inst_followers-*.csv | wc -l) - 1" | bc)"
+   
       
     - name: Create Release
       id: create_release
